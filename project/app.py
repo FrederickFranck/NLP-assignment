@@ -56,7 +56,8 @@ def route_api():
             # Replace with actual function
             result = predict_tax(content)
             return render_template("index.html", result=result)
-
+        else:
+            return "Something Went wrong"
 
 if __name__ == "__main__":
     app.secret_key = "super_secret_key"
