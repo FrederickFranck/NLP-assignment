@@ -1,0 +1,58 @@
+<!doctype hmtl>
+
+<title>Turbo Taxt Predictor</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
+
+
+
+<section class="content">
+
+    {% for mesg in get_flashed_messages() %}
+    <h4>{{ mesg }}</h4>
+    {% endfor %}
+    <header>
+
+        <h1>Welcome to the Turbo Tax Predictor</h1>
+        <img src="{{ url_for('static', filename='accountant.webp') }}" width="500" height="500" />
+    </header>
+
+    <div class="column">
+        <form id="txt" action="" method="POST">
+            <div>
+                <p>Input Text:</p>
+                <p><textarea name="text" id="text" cols="30" rows="10"></textarea></p>
+                <p><input id="submit_button_text" type="submit" value="Predict">
+            </div>
+        </form>
+    </div>
+    <div class="column">
+        <form id="txtfile" action="" enctype="multipart/form-data" method="POST">
+            <div>
+                <p>Upload Textfile:</p>
+                <p><input id="upload_button" type="file" name="file"></p>
+                <p><input id="submit_button_file" type="submit" value="Upload">
+            </div>
+        </form>
+    </div>
+    {% if result %}
+    <div class="column">
+        <h3> The Text is about Taxes : {{result}} </h3>
+    </div>
+    <br>
+    {% endif %}
+
+
+
+
+</section>
+<div class="footer">
+    <h3>
+        How it's made &nbsp;<a href="https://github.com/FrederickFranck/NLP-assignment" target="_blank"><img width="35"
+                height="35" src="{{ url_for('static', filename='github_logo_b.png') }}" alt="github_logo"></a>
+    </h3>
+
+</div>
+
+
+
+</html>
