@@ -1,2 +1,3 @@
 /project/notebooks
 /project/data
+!/project/data/tax_keywords_nl.pkl

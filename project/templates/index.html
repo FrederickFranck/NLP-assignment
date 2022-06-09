@@ -1,6 +1,6 @@
 <!doctype hmtl>
 
-<title>Turbo Taxt Predictor</title>
+<title>Turbo Tax Predictor</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
 
 
@@ -36,7 +36,7 @@
     </div>
     {% if result %}
     <div class="column">
-        <h3> The Text is about Taxes : {{result}} </h3>
+        <h3> Tax Related Score : {{result}} </h3>
     </div>
     <br>
     {% endif %}

@@ -3,9 +3,11 @@ from tokenize import String
 from flask import Flask, render_template, request, flash
 from werkzeug.utils import secure_filename
 import pathlib
+import nlp.keywords as kw
 
 ALLOWED_EXTENSIONS = set(["txt"])
 UPLOAD_FOLDER = pathlib.Path(__file__).parent / "static/uploads/"
+KEYWORD_FILE = pathlib.Path(__file__).parent / "data/tax_keywords_nl.pkl"
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -15,11 +17,6 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Replace with actual function
-def predict_tax(text: String) -> bool:
-    return True
-
-
 @app.route("/", methods=["GET", "POST"])
 def route_api():
     if request.method == "GET":
@@ -27,13 +24,12 @@ def route_api():
 
     if request.method == "POST":
 
-        try:
-            text = request.form["text"]
+        if 'text' in request.form:
+            text = request.form['text']
             print(text)
-            result = predict_tax(text)
+            result = kw.score_text(text,file_keywords=KEYWORD_FILE)
+            print(result)
             return render_template("index.html", result=result)
-        except:
-            print("No text input")
 
         if "file" not in request.files:
             flash("No file uploaded")
@@ -53,8 +49,7 @@ def route_api():
             content = _file.read()
             print(f"Content : {content}")
 
-            # Replace with actual function
-            result = predict_tax(content)
+            result = kw.score_text(content,file_keywords=KEYWORD_FILE)         
             return render_template("index.html", result=result)
         else:
             return "Something Went wrong"
