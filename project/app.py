@@ -24,10 +24,10 @@ def route_api():
 
     if request.method == "POST":
 
-        if 'text' in request.form:
-            text = request.form['text']
+        if "text" in request.form:
+            text = request.form["text"]
             print(text)
-            result = kw.score_text(text,file_keywords=KEYWORD_FILE)
+            result = kw.score_text(text, file_keywords=KEYWORD_FILE)
             print(result)
             return render_template("index.html", result=result)
 
@@ -49,10 +49,11 @@ def route_api():
             content = _file.read()
             print(f"Content : {content}")
 
-            result = kw.score_text(content,file_keywords=KEYWORD_FILE)         
+            result = kw.score_text(content, file_keywords=KEYWORD_FILE)
             return render_template("index.html", result=result)
         else:
             return "Something Went wrong"
+
 
 if __name__ == "__main__":
     app.secret_key = "super_secret_key"
