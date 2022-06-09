@@ -1,5 +1,9 @@
+from ast import keyword
 import os
+import pandas as pd
 from tokenize import String
+from threading import Thread
+
 from flask import Flask, render_template, request, flash
 from werkzeug.utils import secure_filename
 import pathlib
@@ -8,6 +12,10 @@ import nlp.keywords as kw
 ALLOWED_EXTENSIONS = set(["txt"])
 UPLOAD_FOLDER = pathlib.Path(__file__).parent / "static/uploads/"
 KEYWORD_FILE = pathlib.Path(__file__).parent / "data/tax_keywords_nl.pkl"
+DOCSCORES_FILE = pathlib.Path(__file__).parent / "data/tax_docscores_nl.pkl"
+FILES = pathlib.Path(__file__).parent / "data/Staatsblad.pkl"
+
+
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -24,6 +32,7 @@ def route_api():
 
     if request.method == "POST":
 
+        #Regen keywords
         if "text" in request.form:
             text = request.form["text"]
             print(text)
@@ -53,6 +62,29 @@ def route_api():
             return render_template("index.html", result=result)
         else:
             return "Something Went wrong"
+
+@app.route("/loading", methods=["GET", "POST"])
+def loading():
+    if request.method == "POST":        
+
+        keywords = request.form['keywords']
+        keywords = keywords.split(',')
+        print(keywords)
+        thread = Thread(target = create_new_keywords, args = (keywords, ))
+        thread.start()
+        print('Started')
+        return render_template("loading.html")
+
+
+
+@app.route("/complete")
+def create_new_keywords(keywords):
+    df = pd.read_pickle(FILES)
+    df.dropna(inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    kw.create_initial_keywordlist(df, KEYWORD_FILE, DOCSCORES_FILE, list_keywords=keywords)
+    #flash('NEW KEYWORDS GENERATED')
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

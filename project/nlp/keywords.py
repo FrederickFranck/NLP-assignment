@@ -233,13 +233,14 @@ def create_initial_keywordlist(
     keywords_file: str,
     docscores_file: str,
     language: str = "nl",
+    list_keywords: list = ["belasting", "tax", "fisc"]
 ) -> None:
     # create keyword list picklefile and docscores picklefile
     # read all docs
     if language == "nl":
         # start search for nl keywords
         keywords, docscores = create_pickle_keywords_and_docscores(
-            dataframe,["belasting", "tax", "fisc"], keywords_file, docscores_file,
+            dataframe,list_keywords, keywords_file, docscores_file,
         )
     else:
         print("Language selection not supported for now!")

@@ -16,6 +16,15 @@
         <img src="{{ url_for('static', filename='accountant.webp') }}" width="500" height="500" />
     </header>
 
+    <div id="keywords">
+        <form id="keywords" action="{{ url_for('loading') }}" method="POST">
+            <p>Input keywords:
+                <input type="text" name="keywords" id="keywords">
+            </p>
+            <p><input id="submit_button" type="submit" value="Generate Keywords"></p>
+        </form>
+    </div>
+
     <div class="column">
         <form id="txt" action="" method="POST">
             <div>
