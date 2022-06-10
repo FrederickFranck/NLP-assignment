@@ -1,6 +1,6 @@
 <!doctype hmtl>
 
-<title>Turbo Taxt Predictor</title>
+<title>Turbo Tax Predictor</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
 
 
@@ -15,6 +15,15 @@
         <h1>Welcome to the Turbo Tax Predictor</h1>
         <img src="{{ url_for('static', filename='accountant.webp') }}" width="500" height="500" />
     </header>
+
+    <div id="keywords">
+        <form id="keywords" action="{{ url_for('loading') }}" method="POST">
+            <p>Input keywords:
+                <input type="text" name="keywords" id="keywords">
+            </p>
+            <p><input id="submit_button" type="submit" value="Generate Keywords"></p>
+        </form>
+    </div>
 
     <div class="column">
         <form id="txt" action="" method="POST">
@@ -36,7 +45,7 @@
     </div>
     {% if result %}
     <div class="column">
-        <h3> The Text is about Taxes : {{result}} </h3>
+        <h3> Tax Related Score : {{result}} </h3>
     </div>
     <br>
     {% endif %}
