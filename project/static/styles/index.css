@@ -14,6 +14,7 @@ h4 {
     font-size: 20px;
     display: block;
     margin-bottom: 70px;
+    background-color: #00ffea80;
 }
 
 .footer {
@@ -23,11 +24,10 @@ h4 {
     width: 100%;
     text-align: center;
   }
-  
+
 
 .content {
     max-width: 70%;
     margin: auto;
     margin-bottom: 340px;
-
-  }
+  } 

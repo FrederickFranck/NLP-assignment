@@ -68,7 +68,7 @@ def route_api():
             path = os.path.join(app.config["UPLOAD_FOLDER"] / filename)
             print(f"path = {path}")
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            _file = open(os.path.join(app.config["UPLOAD_FOLDER"], filename), "r")
+            _file = open(os.path.join(app.config["UPLOAD_FOLDER"], filename), "r", encoding='latin-1')
             content = _file.read()
             print(f"Content : {content}")
 
