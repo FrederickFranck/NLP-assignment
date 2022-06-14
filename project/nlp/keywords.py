@@ -345,3 +345,49 @@ def score_text_byvector(
     docscore = token_doc.similarity(token_txt)
 
     return round(docscore, 2) if docscore != 0 else -1
+
+
+def get_topic_byvector(txt: str, language: str = "nl") -> float:
+    if language != "nl":
+        print("Language selection not supported for now!")
+        return -1
+    list_topic_keywords = [
+        ["inkomstenbelasting"],
+        ["personenbelasting"],
+        ["vennootschapsbelasting"],
+        ["rechtspersonenbelasting"],
+        ["belasting van niet-inwoners"],
+        ["belasting op de toegevoegde waarde"],
+        ["internationale belastingrecht"],
+        ["registratierechten"],
+        ["successierechten"],
+        ["douanerechten"],
+        ["verkeersbelasting"],
+        ["loonbelasting"],
+        ["dividendbelasting"],
+        ["erfbelasting"],
+        ["schenkbelasting"],
+        ["kansspelbelasting"],
+        ["gokbelasting"],
+        ["vermogensrendementsheffing"],
+    ]
+
+    # clean text
+    txt_doc = ""
+    dict_uniqwords, list_tokens = nlp_cleanandlemmatize(txt, [])
+    for i in list_tokens:
+        txt_doc += " " + (i.lemma_).lower()
+
+    #
+    topicscore = []
+    for list_keywords in list_topic_keywords:
+        txt_keywords = ""
+        for t in list_keywords:
+            txt_keywords += " " + t
+        token_txt = nlp(txt_keywords)
+        token_doc = nlp(txt_doc)
+
+        topicscore.append([round(token_doc.similarity(token_txt),2), list_keywords])
+        topicscore.sort(reverse=True)
+
+    return topicscore

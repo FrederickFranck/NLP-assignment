@@ -38,8 +38,9 @@ def route_api():
             # If they want to predict the tax score
             if request.form["action"] == "Predict":
                 # result = kw.score_text(text, file_keywords=KEYWORD_FILE)
+                prediction = kw.get_topic_byvector(text)
                 result_v = kw.score_text_byvector(text, file_keywords=KEYWORD_FILE)
-                return render_template("index.html", result=result_v)
+                return render_template("index.html", result=result_v, prediction=prediction)
             # If they want to generate the keywords
             if request.form["action"] == "Keywords":
                 keywords = kw.get_keywordsunsupervised(text)
@@ -73,9 +74,10 @@ def route_api():
 
             # If they want to predict the tax score
             if request.form["action"] == "Predict":
-                # result = kw.score_text(content, file_keywords=KEYWORD_FILE)
+                
+                prediction = kw.get_topic_byvector(content)
                 result_v = kw.score_text_byvector(content, file_keywords=KEYWORD_FILE)
-                return render_template("index.html", result=result_v)
+                return render_template("index.html", result=result_v, prediction=prediction)
 
             # If they want to generate the keywords
             if request.form["action"] == "Keywords":

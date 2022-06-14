@@ -72,6 +72,25 @@
     {% if result %}
     <div class="column">
         <h3> Tax Related Score : {{result}} </h3>
+        <br>
+        <div class="column">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Topics</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in prediction[:3] %}
+                    <tr>
+                        <td style="text-align:center;"> {{ value[1][0] }} </td>
+                        <td style="text-align:center;"> {{ value[0] }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <br>
     {% endif %}
