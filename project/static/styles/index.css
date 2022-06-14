@@ -10,7 +10,7 @@ h4 {
 .column {
     padding: 1%;
     float: left;
-    width: 43%;
+    width: 31%;
     font-size: 20px;
     display: block;
 }
@@ -25,7 +25,7 @@ h4 {
   
 
 .content {
-    max-width: 40%;
+    max-width: 50%;
     margin: auto;
     margin-bottom: 340px;
 

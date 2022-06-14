@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 import html2text
 import requests
+import pathlib
+
+file_dataframe = pathlib.Path(__file__).parent / "../data/Staatsblad.pkl"
 
 
 def scrape_urls(df: pd.DataFrame, language: str = "nl", pnt: int = 0) -> None:
@@ -38,7 +41,7 @@ def scrape_urls(df: pd.DataFrame, language: str = "nl", pnt: int = 0) -> None:
                 df[txtlabel][pnt] = cleantext
                 pnt += 1
 
-                df.to_pickle("../data/Staatsblad.pkl")
+                df.to_pickle(file_dataframe)
 
             # if the connections times out continue with the rest of the urls
             except requests.RequestException:
@@ -55,5 +58,5 @@ def scrape_urls(df: pd.DataFrame, language: str = "nl", pnt: int = 0) -> None:
     # Save final dataframe
     df.reset_index(drop=True, inplace=True)
     print(df)
-    df.to_pickle("../data/Staatsblad.pkl")
+    df.to_pickle(file_dataframe)
     print("Done Scraping")

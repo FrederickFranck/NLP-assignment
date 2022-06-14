@@ -1,3 +1,4 @@
+from pydoc import doc
 from typing import Tuple
 import pandas as pd
 import spacy
@@ -15,7 +16,9 @@ if DEBUG:
         return sys._getframe(1).f_code.co_name
 
 
-def nlp_cleanandlemmatize(txtdoc: str, list_wordstoskip: str = ""):
+def nlp_cleanandlemmatize(
+    txtdoc: str, list_wordstoskip: str = "", onlynouns: bool = True
+) -> Tuple[dict, list]:
     if DEBUG:
         print("In function: ", getname(), inspect.signature(globals()[getname()]))
 
@@ -64,6 +67,7 @@ def nlp_cleanandlemmatize(txtdoc: str, list_wordstoskip: str = ""):
     #
     nlp.max_length = 10000000
     nlp_doc = nlp(txtdoc)
+    list_allwordslemmatized = []
     dict_uniqwords = {}
     list_tokens = []
     # filter
@@ -233,17 +237,47 @@ def create_initial_keywordlist(
     keywords_file: str,
     docscores_file: str,
     language: str = "nl",
-    list_keywords: list = ["belasting", "tax", "fisc"]
+    list_keywords: list = ["belasting", "tax", "fisc"],
 ) -> None:
     # create keyword list picklefile and docscores picklefile
     # read all docs
     if language == "nl":
         # start search for nl keywords
         keywords, docscores = create_pickle_keywords_and_docscores(
-            dataframe,list_keywords, keywords_file, docscores_file,
+            dataframe, list_keywords, keywords_file, docscores_file,
         )
     else:
         print("Language selection not supported for now!")
+
+
+# unsupervised keyword search
+def get_keywordsunsupervised(txt: str, sim: float = 0.90) -> dict:
+    # input a text
+    # output relevant keywords
+    doc = nlp(txt)
+
+    chnk = []
+    for chunk in doc.noun_chunks:
+        chnk.append(chunk)
+
+    sim_low = sim
+    txt_keywords = ""
+    list_keywordswithscores = []
+    for c in chnk:
+        word_simil = 0
+        for t in chnk:
+            simil = c.similarity(t)
+            if simil >= sim_low and simil < 1:
+                word_simil += simil
+
+        if word_simil > 1:
+            list_keywordswithscores.append([c, word_simil])
+            txt_keywords = txt_keywords + c.lemma_ + " "
+
+    dict_txt, list_tokens = nlp_cleanandlemmatize(
+        txtdoc=txt_keywords, list_wordstoskip="", onlynouns=True
+    )
+    return dict_txt
 
 
 def score_text(
@@ -263,14 +297,51 @@ def score_text(
         dict_uniqwords, list_tokens = nlp_cleanandlemmatize(txt, [])
 
         docscore = 0
+        count = 0
         for word in list_keywords:
             token_word = nlp(word)
             for token in list_tokens:
                 similar = token_word.similarity(token)
+
                 # similarity > min_score to be taken into account
                 if similar >= min_score:
+                    print(f"Token: {token.text: <50} score : {similar}")
                     docscore += similar
+                    count += 1
+        if not count:
+            count = 1
+        docscore = docscore / count
     else:
         print("Language selection not supported for now!")
+
+    return round(docscore, 2) if docscore != 0 else -1
+
+
+def score_text_byvector(
+    txt: str,
+    language: str = "nl",
+    min_score: float = 0.3,
+    file_keywords: str = "../data/tax_keywords_nl.pkl",
+) -> float:
+    if language != "nl":
+        print("Language selection not supported for now!")
+        return -1
+
+    df_keywords = pd.read_pickle(file_keywords)
+    list_keywords = list(df_keywords["keywords"])
+
+    txt_keywords = ""
+    for t in list_keywords:
+        txt_keywords += " " + t
+    token_txt = nlp(txt_keywords)
+
+    # clean txt
+    txt_doc = ""
+    dict_uniqwords, list_tokens = nlp_cleanandlemmatize(txt, [])
+    for i in list_tokens:
+        txt_doc += " " + (i.lemma_).lower()
+    token_doc = nlp(txt_doc)
+
+    docscore = token_doc.similarity(token_txt)
 
     return round(docscore, 2) if docscore != 0 else -1

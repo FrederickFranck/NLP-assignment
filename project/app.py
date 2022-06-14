@@ -1,4 +1,3 @@
-from ast import keyword
 import os
 import pandas as pd
 from tokenize import String
@@ -16,7 +15,6 @@ DOCSCORES_FILE = pathlib.Path(__file__).parent / "data/tax_docscores_nl.pkl"
 FILES = pathlib.Path(__file__).parent / "data/Staatsblad.pkl"
 
 
-
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -32,23 +30,38 @@ def route_api():
 
     if request.method == "POST":
 
-        #Regen keywords
+        # if there is a text given in the form
         if "text" in request.form:
             text = request.form["text"]
             print(text)
-            result = kw.score_text(text, file_keywords=KEYWORD_FILE)
-            print(result)
-            return render_template("index.html", result=result)
 
+            # If they want to predict the tax score
+            if request.form["action"] == "Predict":
+                # result = kw.score_text(text, file_keywords=KEYWORD_FILE)
+                result_v = kw.score_text_byvector(text, file_keywords=KEYWORD_FILE)
+                return render_template("index.html", result=result_v)
+            # If they want to generate the keywords
+            if request.form["action"] == "Keywords":
+                keywords = kw.get_keywordsunsupervised(text)
+                keywords = dict(
+                    sorted(keywords.items(), key=lambda item: item[1], reverse=True)
+                )
+                return render_template("index.html", keywords=keywords)
+
+        # If there is no text & no file uploaded
         if "file" not in request.files:
             flash("No file uploaded")
             return render_template("index.html")
 
+        # If there is no text & a file uploaded
         file = request.files["file"]
+
+        # If the file is not an allowed file
         if file.filename == "":
             flash("No selected file")
             return render_template("index.html")
 
+        # IF the file is an allowed file
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             path = os.path.join(app.config["UPLOAD_FOLDER"] / filename)
@@ -58,23 +71,35 @@ def route_api():
             content = _file.read()
             print(f"Content : {content}")
 
-            result = kw.score_text(content, file_keywords=KEYWORD_FILE)
-            return render_template("index.html", result=result)
+            # If they want to predict the tax score
+            if request.form["action"] == "Predict":
+                # result = kw.score_text(content, file_keywords=KEYWORD_FILE)
+                result_v = kw.score_text_byvector(content, file_keywords=KEYWORD_FILE)
+                return render_template("index.html", result=result_v)
+
+            # If they want to generate the keywords
+            if request.form["action"] == "Keywords":
+                keywords = kw.get_keywordsunsupervised(content)
+                keywords = dict(
+                    sorted(keywords.items(), key=lambda item: item[1], reverse=True)
+                )
+                return render_template("index.html", keywords=keywords)
+
         else:
             return "Something Went wrong"
 
+
 @app.route("/loading", methods=["GET", "POST"])
 def loading():
-    if request.method == "POST":        
+    if request.method == "POST":
 
-        keywords = request.form['keywords']
-        keywords = keywords.split(',')
+        keywords = request.form["keywords"]
+        keywords = keywords.split(",")
         print(keywords)
-        thread = Thread(target = create_new_keywords, args = (keywords, ))
+        thread = Thread(target=create_new_keywords, args=(keywords,))
         thread.start()
-        print('Started')
+        print("Started")
         return render_template("loading.html")
-
 
 
 @app.route("/complete")
@@ -82,8 +107,10 @@ def create_new_keywords(keywords):
     df = pd.read_pickle(FILES)
     df.dropna(inplace=True)
     df.reset_index(drop=True, inplace=True)
-    kw.create_initial_keywordlist(df, KEYWORD_FILE, DOCSCORES_FILE, list_keywords=keywords)
-    #flash('NEW KEYWORDS GENERATED')
+    kw.create_initial_keywordlist(
+        df, KEYWORD_FILE, DOCSCORES_FILE, list_keywords=keywords
+    )
+    # flash('NEW KEYWORDS GENERATED')
     return render_template("index.html")
 
 

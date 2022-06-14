@@ -16,21 +16,14 @@
         <img src="{{ url_for('static', filename='accountant.webp') }}" width="500" height="500" />
     </header>
 
-    <div id="keywords">
-        <form id="keywords" action="{{ url_for('loading') }}" method="POST">
-            <p>Input keywords:
-                <input type="text" name="keywords" id="keywords">
-            </p>
-            <p><input id="submit_button" type="submit" value="Generate Keywords"></p>
-        </form>
-    </div>
 
     <div class="column">
         <form id="txt" action="" method="POST">
             <div>
                 <p>Input Text:</p>
                 <p><textarea name="text" id="text" cols="30" rows="10"></textarea></p>
-                <p><input id="submit_button_text" type="submit" value="Predict">
+                <p><input type="submit" name="action" value="Predict">
+                <input type="submit" name="action" value="Keywords">
             </div>
         </form>
     </div>
@@ -39,17 +32,46 @@
             <div>
                 <p>Upload Textfile:</p>
                 <p><input id="upload_button" type="file" name="file"></p>
-                <p><input id="submit_button_file" type="submit" value="Upload">
+                <p><input type="submit" name="action" value="Predict">
+                <input type="submit" name="action" value="Keywords">
             </div>
         </form>
     </div>
+
+    
+        {% if keywords %}
+        <div class="column">
+        <table>
+            <thead>
+              <tr>
+                <th>Keywords</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for key, value in keywords.items() %}
+             <tr>
+                 <td> {{ key }}&nbsp; </td> 
+                 <td style="text-align:center;"> {{ value }} </td>
+             </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+   
+
+
+
+
+
     {% if result %}
     <div class="column">
         <h3> Tax Related Score : {{result}} </h3>
     </div>
     <br>
     {% endif %}
-
+    
 
 
 

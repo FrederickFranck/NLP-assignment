@@ -10,8 +10,8 @@ file_keywords = pathlib.Path(__file__).parent / "data/tax_keywords_nl.pkl"
 file_scores = pathlib.Path(__file__).parent / "data/tax_docscores_nl.pkl"
 file_dataframe = pathlib.Path(__file__).parent / "data/Staatsblad.pkl"
 
-SCRAPPING = False
-KEYWORDING = False
+SCRAPPING = True
+KEYWORDING = True
 
 
 def scrapping():
