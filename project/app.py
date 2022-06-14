@@ -58,7 +58,7 @@ def route_api():
 
         # If the file is not an allowed file
         if file.filename == "":
-            flash("No selected file")
+            flash("No File selected")
             return render_template("index.html")
 
         # IF the file is an allowed file
@@ -86,7 +86,8 @@ def route_api():
                 return render_template("index.html", keywords=keywords)
 
         else:
-            return "Something Went wrong"
+            flash("Filetype not allowed")
+            return render_template("index.html")
 
 
 @app.route("/loading", methods=["GET", "POST"])

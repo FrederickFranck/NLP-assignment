@@ -13,6 +13,7 @@ h4 {
     width: 31%;
     font-size: 20px;
     display: block;
+    margin-bottom: 70px;
 }
 
 .footer {
@@ -25,7 +26,7 @@ h4 {
   
 
 .content {
-    max-width: 50%;
+    max-width: 70%;
     margin: auto;
     margin-bottom: 340px;
 
