@@ -1,6 +1,4 @@
-Name: Bouazzaoui Mohammed
-Linkedin: https://www.linkedin.com/in/mbouazzaoui/
-email:bzzmo@hotmail.com
+
 
 
 
