@@ -84,7 +84,7 @@ Score a document using similarity of a document vector and the kyword list vecto
 
 
 ###  ```get_topic_byvector```
-This function predicts the main topic in a dcoument by using a list of topic keywords.
+This function predicts the main topic in a document by using a list of topic keywords.
 For now we have following topics:
 
 - inkomstenbelasting
