@@ -125,7 +125,7 @@ The topics are lists that contain one or more related keywords to the topic.
 
 ### [Mousumi Sen](https://github.com/MousumiAria)
 
-- ![](https://i.stack.imgur.com/gVE0j.png) https://www.linkedin.com/in/mousumi-sen-60359a205/
+- ![](https://i.stack.imgur.com/gVE0j.png) https://www.linkedin.com/in/mousumi-sen/
 
 - 📧 mousumisen776@gmail.com
 
